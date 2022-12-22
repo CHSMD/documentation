@@ -21,7 +21,7 @@
   - Full CRUD operations
     - User can add or delete, or update items in their shopping cart
     
-  - Message Client using sockets
+  - Message Client using sockets and queue
     -  User can chat with botanists (plant nurse) about plant care
    
   - Deployed on AWS
