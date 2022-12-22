@@ -13,18 +13,20 @@
  
   - Authentication and Authorization
     -  Admin that can see all users, and create, update or delete plants in the collection
-    -  User can login
+    -  Customer can login
     
   - Create in house API and/or plant API)
-    -  User can search for/browse all plants
+    -  Customer can search for/browse all plants
     
   - Full CRUD operations
-    - User can add or delete, or update items in their shopping cart
+    - Customer can add or delete, or update items in their shopping cart
     
   - Message Client using sockets and queue
-    -  User can chat with botanists (plant nurse) about plant care
+    -  Customer can chat with botanists (plant nurse) about plant care
    
   - Deployed on AWS
+
+  - Unit tests for each feature
 
 3. Stretch goals
 
