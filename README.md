@@ -10,6 +10,7 @@ Version: 1.0.0
 ![UML]()
 - [Cooperation Plan](https://github.com/CHSMD/plant.space/blob/main/documentation/cooperation-plan.md)
 - [Project Pitch](https://github.com/CHSMD/plant.space/blob/main/documentation/project-pitch.md)
+- [Kanban Board](https://github.com/orgs/CHSMD/projects/1)
 
 ## Overview
  
