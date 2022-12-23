@@ -1,6 +1,4 @@
-Midterm - Class 401d49
-
-## Project: DOCUMENTATION!!!!!!!!!
+# Plant Space
 
 ### Author's: Camilla Rees, Dustin Apodaca, Megan Seibert-Hughes, Hunter Fehr
 
@@ -9,29 +7,21 @@ in our project we want to showcase
 
 ### Links and Resources
 
+- [Cooperation Plan](https://github.com/CHSMD/plant.space/blob/main/documentation/cooperation-plan.md)
+- [Project Pitch](https://github.com/CHSMD/plant.space/blob/main/documentation/project-pitch.md)
+- [Kanban Board](https://github.com/orgs/CHSMD/projects/1)
+
+
 - [ci/cd](http://xyz.com) (GitHub Actions)
 - [back-end server url](http://xyz.com) (when applicable)
 - [front-end application](http://xyz.com) (when applicable)
 
-### Setup
+## Deployment 
+- [Deployed Server]()
 
-#### `.env` requirements (where applicable)
+### How it Works
 
-i.e.
-
-- `PORT` - Port Number
-- `DATABASE_URL` - URL to the running Postgres instance/db
-
-#### How to initialize/run your application (where applicable)
-
-- e.g. `npm start`
-
-#### How to use your library (where applicable)
-
-#### Features / Routes
-
-- Feature One: Details of feature
-- GET : `/hello` - specific route to hit
+### Key Features
 
 #### Tests
 
@@ -42,3 +32,9 @@ i.e.
 #### UML
 
 Link to an image of the UML for your application and response to events
+
+## Change Log
+
+[PR 1]()
+
+## Credit and Collaborations
