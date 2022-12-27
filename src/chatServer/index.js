@@ -2,6 +2,7 @@
 
 const { server } = require('../server/index');
 const Queue = require('./chatQueue/queue');
+const inquirer = require('inquirer');
 
 const plantChat = server.of('/myaccount/chat');
 
@@ -28,11 +29,6 @@ plantChat.on('CONNECT', (socket) => {
     }
   });
 
-  socket.on('MESSAGE', (payload) => {
-    console.log(`Plant Agent: ${payload}`);
-    socket.to(socket.rooms[0]).emit('MESSAGE', payload);
-  });
-
   socket.on('CHAT-ENDED', room => {
     if(!chatQueue.isEmpty()) {
       const nextUser = chatQueue.dequeue();
@@ -44,6 +40,8 @@ plantChat.on('CONNECT', (socket) => {
     }
   });
 });
+
+
 
 // I still need to work on the following:
 
