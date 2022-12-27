@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "hmfehr",
+    "username": "dustinapodaca",
     "password": null,
-    "database": "plant.space",
+    "database": "usersDev",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
