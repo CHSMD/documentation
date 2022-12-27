@@ -8,7 +8,7 @@ const plantChat = server.of('/myaccount/chat');
 const chatQueue = new Queue();
 let availableRep = true;
 
-plantChat.on('connect', (socket) => {
+plantChat.on('CONNECT', (socket) => {
   console.log('Connected to the plant.space customer service chat.');
 
   socket.on('JOIN', (room, payload) => {
