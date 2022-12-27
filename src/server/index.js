@@ -25,4 +25,5 @@ module.exports = {
       console.log(`Server up on port: ${PORT}`);
     });
   },
+  app: app,
 };
