@@ -3,9 +3,9 @@
 require('dotenv').config();
 const { io } = require('socket.io-client');
 const inquirer = require('inquirer');
-const PORT = process.env.PORT || 3002;
+// const PORT = process.env.PORT || 3002;
 
-const socket = io(`http://localhost:${PORT}/myaccount/chat`);
+const socket = io(`http://localhost:3001/myaccount/chat`);
 
 const joinRoomPrompt = async() => {
 
@@ -31,8 +31,7 @@ const joinRoomPrompt = async() => {
   ])
     .then(answers => {
       socket.emit('JOIN', answers.room, { email: answers.email, orderNumber: answers.orderNumber });
-      console.log('Joined room', answers.room);
-      console.log(answers);
+      console.log('Joined Room:', answers.room);
       sendAndReceiveMessages();
     });
 };
