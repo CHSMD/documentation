@@ -1,66 +1,24 @@
 'use strict';
 
-require('dotenv').config();
 const express = require('express');
-const session = require('express-session');
 const axios = require('axios');
 const cartRouter = express.Router();
 const bearerAuth = require('../auth/middleware/bearer.js');
 const permissions = require('../auth/middleware/acl');
 
-cartRouter.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false },
-}));
-
-cartRouter.post('/add-to-cart', async (req, res, next) => {
+cartRouter.get('/myplantcart', bearerAuth, permissions('cartRead'), async (req, res, next) => {
   try {
-    const plantId = req.body.id;
-    const quantity = req.body.quantity;
+    const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection';
 
-    if (!plantId || !quantity) {
-      throw new Error('Missing plantId or quantity');
-    }
-
-    req.session.order = req.session.order || [];
-    req.session.order.push({ id: plantId, quantity });
-    res.send({
-      message: `Successfully added ${quantity} of plantID:${plantId} to your cart`,
-      order: req.session.order,
-    });
+    const response = await axios.get(apiEndpoint);
+    res.status(200).send(response.data);
   } catch (error) {
     next(error);
   }
 });
 
-cartRouter.post('/orders', bearerAuth, permissions('user'), async (req, res, next) => {
-  const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders';
-  try {
-    const orderData = { plants: req.session.order };
-    console.log(orderData);
-    const response = await axios.post(apiEndpoint, orderData);
-
-    req.session.order = [];
-    res.send(response.data);
-  } catch (error) {
-    next(error);
-  }
-});
-
-cartRouter.put('/orders/:orderNumber', bearerAuth, permissions('admin'), async (req, res, next) => {
-  const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders/${req.params.orderNumber}`;
-  try {
-    const response = await axios.put(apiEndpoint);
-    res.send(response.data);
-  } catch (error) {
-    next(error);
-  }
-});
-
-cartRouter.get('/orders', bearerAuth, permissions('admin'), async (req, res, next) => {
-  const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders';
+cartRouter.get('/myplantcart/:id',  bearerAuth, permissions('cartRead'), async (req, res, next) => {
+  const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection/${req.params.id}`;
   try {
     const response = await axios.get(apiEndpoint);
     res.status(200).send(response.data);
@@ -69,14 +27,47 @@ cartRouter.get('/orders', bearerAuth, permissions('admin'), async (req, res, nex
   }
 });
 
-cartRouter.get('/orders/:orderNumber', bearerAuth, permissions('user'), async (req, res, next) => {
-  const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders/${req.params.orderNumber}`;
+
+cartRouter.put('/myplantcart/:id', bearerAuth, permissions('cartUpdate'), async (req, res, next) => {
+  const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection/${req.params.id}`;
   try {
-    const response = await axios.get(apiEndpoint);
+    const response = await axios.put(apiEndpoint, req.body);
     res.status(200).send(response.data);
   } catch (error) {
     next(error);
   }
 });
+
+cartRouter.delete('/myplantcart/:id',  bearerAuth, permissions('cartDelete'), async (req, res, next) => {
+  const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection/${req.params.id}`;
+  try {
+    const response = await axios.delete(apiEndpoint);
+    res.status(204).send(response.data);
+  } catch (error) {
+    next(error);
+  }
+});
+
+cartRouter.post('/myplantcart',  bearerAuth, permissions('cartCreate'), async (req, res, next) => {
+  const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection';
+  // const options = {
+  //   method: 'GET',
+  //   url: 'https://house-plants.p.rapidapi.com/common/coralberry',
+  //   headers: {
+  //     'X-RapidAPI-Key': 'e2b412e95bmshd819cfe55d2ac1bp14e845jsn7156cb08f7f5',
+  //     'X-RapidAPI-Host': 'house-plants.p.rapidapi.com',
+  //   },
+  // };
+  try {
+    const response = await axios.post(apiEndpoint, req.body);
+    res.status(200).send(response.data);
+  } catch (error) {
+    next(error);
+  }
+
+});
+
 
 module.exports = cartRouter;
+
+

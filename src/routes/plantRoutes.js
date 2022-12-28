@@ -3,10 +3,10 @@
 const express = require('express');
 const axios = require('axios');
 const plantRouter = express.Router();
+const bearerAuth = require('../auth/middleware/bearer.js');
 const permissions = require('../auth/middleware/acl');
-const { Router } = require('express');
 
-plantRouter.get('/collection', async (req, res, next) => {
+plantRouter.get('/collection', bearerAuth, permissions('read'), async (req, res, next) => {
   try {
     const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection';
 
@@ -17,7 +17,7 @@ plantRouter.get('/collection', async (req, res, next) => {
   }
 });
 
-plantRouter.get('/collection/:id', async (req, res, next) => {
+plantRouter.get('/collection/:id',  bearerAuth, permissions('read'), async (req, res, next) => {
   const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection/${req.params.id}`;
   try {
     const response = await axios.get(apiEndpoint);
@@ -28,7 +28,7 @@ plantRouter.get('/collection/:id', async (req, res, next) => {
 });
 
 
-plantRouter.put('/collection/:id', async (req, res, next) => {
+plantRouter.put('/collection/:id', bearerAuth, permissions('update'), async (req, res, next) => {
   const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection/${req.params.id}`;
   try {
     const response = await axios.put(apiEndpoint, req.body);
@@ -38,7 +38,7 @@ plantRouter.put('/collection/:id', async (req, res, next) => {
   }
 });
 
-plantRouter.delete('/collection/:id', async (req, res, next) => {
+plantRouter.delete('/collection/:id',  bearerAuth, permissions('delete'), async (req, res, next) => {
   const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection/${req.params.id}`;
   try {
     const response = await axios.delete(apiEndpoint);
@@ -48,7 +48,7 @@ plantRouter.delete('/collection/:id', async (req, res, next) => {
   }
 });
 
-plantRouter.post('/collection', async (req, res, next) => {
+plantRouter.post('/collection',  bearerAuth, permissions('create'), async (req, res, next) => {
   const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection';
   // const options = {
   //   method: 'GET',
