@@ -142,4 +142,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# config postgres
+
+config/
+
 # End of https://www.gitignore.io/api/vim,osx,node,linux,windows

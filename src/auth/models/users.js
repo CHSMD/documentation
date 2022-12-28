@@ -10,7 +10,7 @@ const userModel = (sequelize, DataTypes) => {
   const model = sequelize.define('Users', {
     username: { type: DataTypes.STRING, required: true, unique: true },
     password: { type: DataTypes.STRING, required: true },
-    role: { type: DataTypes.ENUM('user', 'teller', 'admin'), required: true, defaultValue: 'user'},
+    role: { type: DataTypes.ENUM('user', 'admin'), required: true, defaultValue: 'user'},
     token: {
       type: DataTypes.VIRTUAL,
       get() {
@@ -25,8 +25,7 @@ const userModel = (sequelize, DataTypes) => {
       type: DataTypes.VIRTUAL,
       get() {
         const acl = {
-          user: ['read'],
-          teller: ['read', 'create'],
+          user: ['read', 'cartRead', 'cartCreate', 'cartUpdate', 'cartDelete'],
           admin: ['read', 'create', 'update', 'delete'],
         };
         return acl[this.role];
