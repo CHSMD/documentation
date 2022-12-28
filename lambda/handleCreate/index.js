@@ -41,16 +41,16 @@ exports.handler = async (event) => {
 
 // Code for Express server using Axios to make a POST request to the API Gateway endpoint
 // app.post('/plants', async (req, res, next) => {
-//   // Set the API Gateway endpoint URL
-//   // we can put our AWS API Gateway endpoint URL in a variable called apiEndpoint etc
-//   // const apiEndpoint = 'https://<api-id>.execute-api.<region>.amazonaws.com/<stage>/collection';
-//   try {
-//     const response = await axios.post(apiEndpoint, req.body);
-//     res.status(200).send(response.data);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+//   Set the API Gateway endpoint URL
+//   we can put our AWS API Gateway endpoint URL in a variable called apiEndpoint etc
+  const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace';
+  try {
+    const response = await axios.post(apiEndpoint, req.body);
+    res.status(200).send(response.data);
+  } catch (error) {
+    next(error);
+  }
+});
 
 // JSON data to send to the API Gateway endpoint
 // {
