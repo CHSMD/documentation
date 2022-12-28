@@ -31,7 +31,6 @@ socket.on('JOIN', (room, payload) => {
     console.log(`Client: ${payload}`);
   });
   sendAndReceiveMessages();
-
 });
 
 
