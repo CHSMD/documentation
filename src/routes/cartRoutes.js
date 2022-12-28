@@ -2,11 +2,11 @@
 
 const express = require('express');
 const axios = require('axios');
-const plantRouter = express.Router();
+const cartRouter = express.Router();
 const bearerAuth = require('../auth/middleware/bearer.js');
 const permissions = require('../auth/middleware/acl');
 
-plantRouter.get('/collection', bearerAuth, permissions('read'), async (req, res, next) => {
+cartRouter.get('/myplantcart', bearerAuth, permissions('cartRead'), async (req, res, next) => {
   try {
     const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection';
 
@@ -17,7 +17,7 @@ plantRouter.get('/collection', bearerAuth, permissions('read'), async (req, res,
   }
 });
 
-plantRouter.get('/collection/:id',  bearerAuth, permissions('read'), async (req, res, next) => {
+cartRouter.get('/myplantcart/:id',  bearerAuth, permissions('cartRead'), async (req, res, next) => {
   const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection/${req.params.id}`;
   try {
     const response = await axios.get(apiEndpoint);
@@ -28,7 +28,7 @@ plantRouter.get('/collection/:id',  bearerAuth, permissions('read'), async (req,
 });
 
 
-plantRouter.put('/collection/:id', bearerAuth, permissions('update'), async (req, res, next) => {
+cartRouter.put('/myplantcart/:id', bearerAuth, permissions('cartUpdate'), async (req, res, next) => {
   const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection/${req.params.id}`;
   try {
     const response = await axios.put(apiEndpoint, req.body);
@@ -38,7 +38,7 @@ plantRouter.put('/collection/:id', bearerAuth, permissions('update'), async (req
   }
 });
 
-plantRouter.delete('/collection/:id',  bearerAuth, permissions('delete'), async (req, res, next) => {
+cartRouter.delete('/myplantcart/:id',  bearerAuth, permissions('cartDelete'), async (req, res, next) => {
   const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection/${req.params.id}`;
   try {
     const response = await axios.delete(apiEndpoint);
@@ -48,7 +48,7 @@ plantRouter.delete('/collection/:id',  bearerAuth, permissions('delete'), async 
   }
 });
 
-plantRouter.post('/collection',  bearerAuth, permissions('create'), async (req, res, next) => {
+cartRouter.post('/myplantcart',  bearerAuth, permissions('cartCreate'), async (req, res, next) => {
   const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection';
   // const options = {
   //   method: 'GET',
@@ -68,6 +68,6 @@ plantRouter.post('/collection',  bearerAuth, permissions('create'), async (req, 
 });
 
 
-module.exports = plantRouter;
+module.exports = cartRouter;
 
 
