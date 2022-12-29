@@ -111,14 +111,12 @@ const calculateTotal = async (plants) => {
     for (const plant of plants) {
       const plantData = await Plant.get(plant.id);
       total += plantData.price * plant.quantity;
+      total = Math.round(100 * total) / 100;
     }
   } else {
     const plantData = await Plant.get(plants.id);
     total += plantData.price * plants.quantity;
-    total = Math.round(100*total)/100;
+    total = Math.round(100 * total) / 100;
   }
   return total;
 };
-
-
-

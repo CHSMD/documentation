@@ -37,7 +37,10 @@ const Order = dynamoose.model('order-table', orderSchema);
 exports.handler = async (event) => {
   try {
     // Parse the order number from the request params
-    const orderNumber = event.pathParameters.orderNumber;
+    let orderNumber = event.pathParameters.orderNumber;
+    if (orderNumber) {
+      orderNumber = parseInt(orderNumber);
+    }
 
     // Get the order from the database
     const order = await Order.get(orderNumber);
@@ -46,8 +49,8 @@ exports.handler = async (event) => {
     let currentDate = today.toDateString();
 
     // Generate a tracking number that always starts with '1Z' and is 18 characters long
-    const generateNumber = '1Z' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    const trackingNumber = generateNumber.toUpperCase();
+    let generateNumber = '1Z' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    let trackingNumber = generateNumber.toUpperCase();
 
     // Update the order status
     order.status = `Shipped on ${currentDate} with Tracking Number: ${trackingNumber}`;
