@@ -3,9 +3,9 @@
 require('dotenv').config();
 const { io } = require('socket.io-client');
 const inquirer = require('inquirer');
-// const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3002;
 
-const socket = io(`http://localhost:3001/myaccount/chat`);
+const socket = io(`http://localhost:${PORT}/myaccount/chat`);
 
 const joinRoomPrompt = async () => {
   inquirer.prompt([
@@ -45,7 +45,6 @@ socket.on('WAITING', () => {
 });
 
 socket.on('CHAT-STARTED', async (room) => {
-
   setTimeout(() => {
     console.log('Your conversation with an plant.space representative has started.');
     process.stdout.write('\n');
@@ -62,7 +61,6 @@ socket.on('CHAT-STARTED', async (room) => {
 });
 
 socket.on('MESSAGE', async (payload) => {
-
   setTimeout(() => {
     console.log(`REP: ${payload}`);
     process.stdout.write('\n');
