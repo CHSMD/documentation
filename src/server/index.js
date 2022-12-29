@@ -68,9 +68,7 @@ plantChat.on('connection', (socket) => {
         process.stdout.write('\n');
       }, 1000);
 
-
     } else {
-
       chatQueue.enqueue({
         socket: socket,
         room: room,
@@ -85,13 +83,8 @@ plantChat.on('connection', (socket) => {
 
       let inQueue = chatQueue.length();
 
-      // process.stdout.write('\n');
-      // console.log(chatQueue);
-      // process.stdout.write('\n');
-
       console.log(`::: You currently have ${inQueue} client(s) waiting in the queue for you to become available...`);
       process.stdout.write('\n');
-
     }
   });
 

@@ -45,7 +45,6 @@ socket.on('WAITING', () => {
 });
 
 socket.on('CHAT-STARTED', async (room) => {
-
   setTimeout(() => {
     console.log('Your conversation with an plant.space representative has started.');
     process.stdout.write('\n');
@@ -62,7 +61,6 @@ socket.on('CHAT-STARTED', async (room) => {
 });
 
 socket.on('MESSAGE', async(payload) => {
-
   setTimeout(() => {
     console.log(`REP: ${payload}`);
     process.stdout.write('\n');
@@ -107,37 +105,3 @@ const sendMessage = async (room) => {
       });
   }, 500);
 };
-
-// const sendAndReceiveMessages = async () => {
-//   const clientMessage = await inquirer.prompt([
-//     {
-//       type: 'input',
-//       name: 'message',
-//       message: 'Please enter your message:',
-//     },
-//   ]);
-//   socket.emit('CLIENTMESSAGE', clientMessage.message);
-//   socket.on('MESSAGE', payload => {
-//     console.log(`Plant Agent: ${payload}`);
-//     // if(payload === 'Is there anything else I can help you with?'){
-//     //   leaveChatPrompt();
-//     // }
-//     const continueChat = inquirer.prompt([
-//       {
-//         type: 'list',
-//         name: 'replyOrExit',
-//         message: 'Would you like to reply or exit the chat?',
-//         choices: ['Reply', 'Exit'],
-//       },
-//     ])
-//       .then(answers => {
-//         if (answers.replyOrExit === 'Reply') {
-//           sendAndReceiveMessages();
-//         } else {
-//           socket.emit('CHAT-ENDED');
-//           console.log('Have a great day!');
-//           process.exit();
-//         }
-//       });
-//   });
-// };
