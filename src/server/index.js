@@ -5,6 +5,8 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
+const handle404 = require('../errorHandlers/404');
+const handle500 = require('../errorHandlers/500');
 
 // Socket Server Imports
 // const ioChat = require('../chatServer');
@@ -173,6 +175,14 @@ app.use(session({
 app.use(authRoutes);
 app.use(plantRoutes);
 app.use(cartRoutes);
+
+app.get('/', (req, res) => {
+  res.send('Welcome to the plant.space E-Commerce API & Socket Server!');
+});
+
+//Error-handlers
+app.use('*', handle404);
+app.use(handle500);
 
 module.exports = {
   server: io,

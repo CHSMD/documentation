@@ -7,10 +7,10 @@ module.exports = (capability) => {
       if (req.user.capabilities.includes(capability)){
         next();
       } else {
-        next('Acess Denied');
+        next('SERVER: Access Denied');
       }
     } catch (error) {
-      next('Invalid login');
+      next('ERROR: Invalid Login');
     }
   };
 };

@@ -1,8 +1,6 @@
 'use strict';
 
 const dynamoose = require('dynamoose');
-// const Chance = require('chance');
-// const chance = new Chance();
 
 const plantSchema = new dynamoose.Schema({
   id: Number,
@@ -42,7 +40,6 @@ exports.handler = async (event) => {
     const orderData = JSON.parse(event.body);
     console.log('Order Data: ', orderData);
     // Generate a unique order number
-    // const orderNumber = chance.fbid();
     const orderNumber = Math.floor(Math.random() * 9000000000) + 1000000000;
     console.log('Order Number: ', orderNumber);
     // Calculate the total cost of the order
@@ -75,10 +72,23 @@ exports.handler = async (event) => {
       //get the plant from the plant table using the plant id
       const plantData = await Plant.get(plant.id);
       console.log('Plant Data:', plantData);
+
+      if (plantData.availability < plant.quantity || plantData.availability === 0) {
+        return {
+          statusCode: 400,
+          body: JSON.stringify({
+            message: `'${plantData.name}' does not have enough available stock to fulfill your order. Please try again.`,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        };
+      }
       //use dynamoose.transaction to update the availability of the plant in the plant database and then send back the order object containing the order number, and total cost of the order and a new status of 'pending'
       transactions.push(
         Plant.transaction.update(plant.id, {
           availability: plantData.availability - plant.quantity,
+          inStock: plantData.availability - plant.quantity > 0 ? true : false,
         }),
       );
       // Plant.transaction.update(Plant, plant.id, {
@@ -130,4 +140,3 @@ const calculateTotal = async (plants) => {
   }
   return total;
 };
-
