@@ -2,6 +2,7 @@
 
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
 const { Server } = require('socket.io');
 const { createServer } = require('http');
 const cors = require('cors');
@@ -83,13 +84,17 @@ plantChat.on('connection', (socket) => {
 
 });
 
-
-
-
 io.use(cors);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false },
+}));
 
 app.use(authRoutes);
 app.use(plantRoutes);

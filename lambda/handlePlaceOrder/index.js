@@ -1,7 +1,8 @@
 'use strict';
 
 const dynamoose = require('dynamoose');
-const chance = require('chance');
+// const Chance = require('chance');
+// const chance = new Chance();
 
 const plantSchema = new dynamoose.Schema({
   id: Number,
@@ -16,13 +17,21 @@ const plantSchema = new dynamoose.Schema({
 const Plant = dynamoose.model('plant-table', plantSchema);
 
 const orderSchema = new dynamoose.Schema({
-  orderNumber: String,
-  plants: [{
-    id: Number,
-    quantity: Number,
-  }],
+  orderNumber: Number,
+  plants: {
+    type: Array,
+    schema: [{
+      type: Object,
+      schema: {
+        id: Number,
+        quantity: Number,
+      },
+    }],
+  },
   total: Number,
   status: String,
+}, {
+  saveUnknown: true,
 });
 
 const Order = dynamoose.model('order-table', orderSchema);
@@ -30,10 +39,14 @@ const Order = dynamoose.model('order-table', orderSchema);
 exports.handler = async (event) => {
   // Parse the order data from the request body
   const orderData = JSON.parse(event.body);
+  console.log('Order Data: ', orderData);
   // Generate a unique order number
-  const orderNumber = chance.fbid();
+  // const orderNumber = chance.fbid();
+  const orderNumber = Math.floor(Math.random() * 9000000000) + 1000000000;
+  console.log('Order Number: ', orderNumber);
   // Calculate the total cost of the order
   const total = await calculateTotal(orderData.plants);
+  console.log('Total: ', total);
   // Create the order object
   const order = {
     orderNumber,
@@ -45,17 +58,30 @@ exports.handler = async (event) => {
   let transactions = [];
   // Loop through the plants in the order
   for (const plant of orderData.plants) {
+    // parseInt the plant id
+    plant.id = parseInt(plant.id);
+    console.log('Plant ID: ', plant.id);
     //get the plant from the plant table using the plant id
     const plantData = await Plant.get(plant.id);
+    console.log('Plant Data:', plantData);
     //use dynamoose.transaction to update the availability of the plant in the plant database and then send back the order object containing the order number, and total cost of the order and a new status of 'pending'
     transactions.push(
-      dynamoose.transaction.update(Plant, plant.id, {
+      Plant.transaction.update(plant.id, {
         availability: plantData.availability - plant.quantity,
       }),
     );
+    // Plant.transaction.update(Plant, plant.id, {
+    //   availability: plantData.availability - plant.quantity,
+    // });
   }
+
+  console.log('Order: ', order);
+
   // Add the order transaction to the array of transactions
-  transactions.push(dynamoose.transaction.create(Order, order));
+  transactions.push(Order.transaction.create(order));
+  // Order.transaction.create(Order, order);
+  console.log('Transactions: ', transactions);
+
   // Execute the transactions
   await dynamoose.transaction(transactions);
   // Return the order object
