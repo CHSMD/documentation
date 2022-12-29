@@ -35,6 +35,10 @@ const orderSchema = new dynamoose.Schema({
 const Order = dynamoose.model('order-table', orderSchema);
 
 exports.handler = async (event) => {
+  let orderNumber = event.pathParameters.orderNumber;
+  if (orderNumber) {
+    orderNumber = parseInt(orderNumber);
+  }
   try {
     // Parse the order data from the request body
     const orderData = JSON.parse(event.body);
@@ -114,10 +118,9 @@ exports.handler = async (event) => {
       },
     };
   } catch (error) {
-    console.log('Error: ', error);
     return {
-      statusCode: 500,
-      body: JSON.stringify(error),
+      statusCode: 404,
+      body: JSON.stringify({ message: 'No Orders Found' }),
       headers: {
         'Content-Type': 'application/json',
       },
