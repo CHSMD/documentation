@@ -1,8 +1,6 @@
 'use strict';
 
 const dynamoose = require('dynamoose');
-<<<<<<<< HEAD:lambda/handleUpdateOrder/index.js
-========
 // const Chance = require('chance');
 // const chance = new Chance();
 
@@ -17,7 +15,6 @@ const plantSchema = new dynamoose.Schema({
 });
 
 const Plant = dynamoose.model('plant-table', plantSchema);
->>>>>>>> 896c401 (working placeOrder function and routes to add items to a cart):lambda/handlePlaceOrder/index.js
 
 const orderSchema = new dynamoose.Schema({
   orderNumber: Number,
@@ -31,11 +28,7 @@ const orderSchema = new dynamoose.Schema({
       },
     }],
   },
-<<<<<<<< HEAD:lambda/handleUpdateOrder/index.js
-  total: Object,
-========
   total: Number,
->>>>>>>> 896c401 (working placeOrder function and routes to add items to a cart):lambda/handlePlaceOrder/index.js
   status: String,
 }, {
   saveUnknown: true,
@@ -44,96 +37,55 @@ const orderSchema = new dynamoose.Schema({
 const Order = dynamoose.model('order-table', orderSchema);
 
 exports.handler = async (event) => {
-<<<<<<<< HEAD:lambda/handleUpdateOrder/index.js
   try {
-    // Parse the order number from the request params
-    let orderNumber = event.pathParameters.orderNumber;
-    if (orderNumber) {
-      orderNumber = parseInt(orderNumber);
-========
-  // Parse the order data from the request body
-  const orderData = JSON.parse(event.body);
-  console.log('Order Data: ', orderData);
-  // Generate a unique order number
-  // const orderNumber = chance.fbid();
-  const orderNumber = Math.floor(Math.random() * 9000000000) + 1000000000;
-  console.log('Order Number: ', orderNumber);
-  // Calculate the total cost of the order
-  const total = await calculateTotal(orderData.plants);
-  console.log('Total: ', total);
-  // Create the order object
-  const order = {
-    orderNumber,
-    plants: orderData.plants,
-    total,
-    status: 'pending',
-  };
-  // Create an array to store the update transaction objects
-  let transactions = [];
-  // Loop through the plants in the order
-  for (const plant of orderData.plants) {
-    // parseInt the plant id
-    plant.id = parseInt(plant.id);
-    console.log('Plant ID: ', plant.id);
-    //get the plant from the plant table using the plant id
-    const plantData = await Plant.get(plant.id);
-    console.log('Plant Data:', plantData);
-    //use dynamoose.transaction to update the availability of the plant in the plant database and then send back the order object containing the order number, and total cost of the order and a new status of 'pending'
-    transactions.push(
-      Plant.transaction.update(plant.id, {
-        availability: plantData.availability - plant.quantity,
-      }),
-    );
-    // Plant.transaction.update(Plant, plant.id, {
-    //   availability: plantData.availability - plant.quantity,
-    // });
-  }
-
-  console.log('Order: ', order);
-
-  // Add the order transaction to the array of transactions
-  transactions.push(Order.transaction.create(order));
-  // Order.transaction.create(Order, order);
-  console.log('Transactions: ', transactions);
-
-  // Execute the transactions
-  await dynamoose.transaction(transactions);
-  // Return the order object
-  return {
-    statusCode: 200,
-    body: JSON.stringify(order),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-};
-
-const calculateTotal = async (plants) => {
-  let total = 0;
-  if (Array.isArray(plants)) {
-    for (const plant of plants) {
+    // Parse the order data from the request body
+    const orderData = JSON.parse(event.body);
+    console.log('Order Data: ', orderData);
+    // Generate a unique order number
+    // const orderNumber = chance.fbid();
+    const orderNumber = Math.floor(Math.random() * 9000000000) + 1000000000;
+    console.log('Order Number: ', orderNumber);
+    // Calculate the total cost of the order
+    const total = await calculateTotal(orderData.plants);
+    console.log('Total: ', total);
+    // Create the order object
+    const order = {
+      orderNumber,
+      plants: orderData.plants,
+      total,
+      status: 'pending',
+    };
+    // Create an array to store the update transaction objects
+    let transactions = [];
+    // Loop through the plants in the order
+    for (const plant of orderData.plants) {
+      // parseInt the plant id
+      plant.id = parseInt(plant.id);
+      console.log('Plant ID: ', plant.id);
+      //get the plant from the plant table using the plant id
       const plantData = await Plant.get(plant.id);
-      total += plantData.price * plant.quantity;
->>>>>>>> 896c401 (working placeOrder function and routes to add items to a cart):lambda/handlePlaceOrder/index.js
+      console.log('Plant Data:', plantData);
+      //use dynamoose.transaction to update the availability of the plant in the plant database and then send back the order object containing the order number, and total cost of the order and a new status of 'pending'
+      transactions.push(
+        Plant.transaction.update(plant.id, {
+          availability: plantData.availability - plant.quantity,
+        }),
+      );
+      // Plant.transaction.update(Plant, plant.id, {
+      //   availability: plantData.availability - plant.quantity,
+      // });
     }
 
-    // Get the order from the database
-    const order = await Order.get(orderNumber);
+    console.log('Order: ', order);
 
-    let today = new Date();
-    let currentDate = today.toDateString();
+    // Add the order transaction to the array of transactions
+    transactions.push(Order.transaction.create(order));
+    // Order.transaction.create(Order, order);
+    console.log('Transactions: ', transactions);
 
-    // Generate a tracking number that always starts with '1Z' and is 12 characters long
-    let generateNumber = '1Z' + Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
-    let trackingNumber = generateNumber.toUpperCase();
-
-    // Update the order status
-    order.status = `Shipped on ${currentDate}. Tracking Number: ${trackingNumber}`;
-
-    // Save the updated order to the database
-    await order.save();
-
-    // Return the updated order
+    // Execute the transactions
+    await dynamoose.transaction(transactions);
+    // Return the order object
     return {
       statusCode: 200,
       body: JSON.stringify(order),
@@ -152,3 +104,20 @@ const calculateTotal = async (plants) => {
     };
   }
 };
+
+const calculateTotal = async (plants) => {
+  let total = 0;
+  if (Array.isArray(plants)) {
+    for (const plant of plants) {
+      const plantData = await Plant.get(plant.id);
+      total += plantData.price * plant.quantity;
+    }
+  } else {
+    const plantData = await Plant.get(plants.id);
+    total += plantData.price * plants.quantity;
+  }
+  return total;
+};
+
+
+
