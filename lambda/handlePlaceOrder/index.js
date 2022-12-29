@@ -28,7 +28,7 @@ const orderSchema = new dynamoose.Schema({
       },
     }],
   },
-  total: Number,
+  total: Object,
   status: String,
 }, {
   saveUnknown: true,
@@ -47,13 +47,23 @@ exports.handler = async (event) => {
     console.log('Order Number: ', orderNumber);
     // Calculate the total cost of the order
     const total = await calculateTotal(orderData.plants);
+
+    let tax = total * 0.08;
+    tax = Math.round(tax * 100) / 100;
+    let finalTotal = total + tax;
+    finalTotal = Math.round(finalTotal * 100) / 100;
+
     console.log('Total: ', total);
     // Create the order object
     const order = {
       orderNumber,
       plants: orderData.plants,
-      total,
-      status: 'pending',
+      total: {
+        plantTotal: total,
+        tax: tax,
+        finalTotal: finalTotal,
+      },
+      status: 'Pending',
     };
     // Create an array to store the update transaction objects
     let transactions = [];
@@ -120,3 +130,4 @@ const calculateTotal = async (plants) => {
   }
   return total;
 };
+
