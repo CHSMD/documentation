@@ -7,7 +7,7 @@ in our project we want to showcase
 
 ### Links and Resources
 
-![UML, Domain Model, and Database Schema](./assets/plantSpaceUML.png)
+![UML, Domain Model, and Database Schema](./assets/plantSpace-UML.png)
 
 - [Cooperation Plan](https://github.com/CHSMD/plant.space/blob/main/documentation/cooperation-plan.md)
 - [Project Pitch](https://github.com/CHSMD/plant.space/blob/main/documentation/project-pitch.md)
