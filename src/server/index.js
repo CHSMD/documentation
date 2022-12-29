@@ -152,6 +152,25 @@ plantChat.on('connection', (socket) => {
       socket.leave(inRoom);
     }
   });
+
+  // const sendAndReceiveMessages = async () => {
+  //   const repMessage = await inquirer.prompt([
+  //     {
+  //       type: 'input',
+  //       name: 'message',
+  //       message: 'Plant Agent:',
+  //     },
+  //   ])
+  //     .then(answers => {
+  //       socket.emit('MESSAGE', answers.message);
+  //     });
+
+  //   socket.on('CLIENTMESSAGE', (payload) => {
+  //     console.log(`Client: ${payload}`);
+  //   });
+  //   sendAndReceiveMessages();
+  // };
+
 });
 
 app.use(cors());
