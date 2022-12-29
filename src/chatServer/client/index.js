@@ -8,12 +8,11 @@ const inquirer = require('inquirer');
 const socket = io(`http://localhost:3001/myaccount/chat`);
 
 const joinRoomPrompt = async () => {
-
   inquirer.prompt([
     {
       type: 'list',
       name: 'room',
-      message: 'Which room would you like to join?',
+      message: 'What can we help you with today?',
       choices: ['General Plant Care', 'Orders and Shipping', 'Returns and Refunds', 'Other'],
     },
     {
@@ -30,66 +29,83 @@ const joinRoomPrompt = async () => {
     },
   ])
     .then(answers => {
+      process.stdout.write('\n');
       socket.emit('JOIN', answers.room, { email: answers.email, orderNumber: answers.orderNumber });
       console.log('Joined Room:', answers.room);
+      process.stdout.write('\n');
     });
 };
 
 joinRoomPrompt();
 
-
-
 socket.on('WAITING', () => {
-  console.log('You are currently waiting for an agent to become available. Please wait.');
+  process.stdout.write('\n');
+  console.log('You are currently waiting for an agent to become available. Please wait...');
+  process.stdout.write('\n');
 });
 
-socket.on('CHAT-STARTED', async () => {
-  console.log('Your conversation with an agent has started.');
-  const clientMessage = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'message',
-      message: 'Please enter your message:',
-    },
-  ])
-    .then(answers => {
-      socket.emit('CLIENTMESSAGE', answers.message);
-    });
+socket.on('CHAT-STARTED', async (room) => {
+
+  setTimeout(() => {
+    console.log('Your conversation with an plant.space representative has started.');
+    process.stdout.write('\n');
+
+    setTimeout(() => {
+      console.log('REP: Hey there! My name is Dustin, how can I help you today?');
+      process.stdout.write('\n');
+
+      setTimeout(() => {
+        sendMessage(room);
+      }, 500);
+    }, 2000);
+  }, 500);
 });
 
 socket.on('MESSAGE', async(payload) => {
-  console.log(`Plant Agent: ${payload}`);
-  const continueChat = inquirer.prompt([
-    {
-      type: 'list',
-      name: 'replyOrExit',
-      message: 'Would you like to reply or exit the chat?',
-      choices: ['Reply', 'Exit'],
-    },
-  ])
-    .then(answers => {
-      if (answers.replyOrExit === 'Reply') {
-        sendMessage();
-      } else {
-        socket.emit('CHAT-ENDED');
-        console.log('Have a great day!');
-        process.exit();
-      }
-    });
+
+  setTimeout(() => {
+    console.log(`REP: ${payload}`);
+    process.stdout.write('\n');
+
+    setTimeout(async () => {
+      await inquirer.prompt([
+        {
+          type: 'list',
+          name: 'replyOrExit',
+          message: 'Would you like to reply or exit the chat?',
+          choices: ['Reply', 'Exit'],
+        },
+      ])
+        .then(answers => {
+          if (answers.replyOrExit === 'Reply') {
+            process.stdout.write('\n');
+            sendMessage();
+          } else {
+            socket.emit('CHAT-ENDED');
+            process.stdout.write('\n');
+            console.log('REP: Thank you so much for your time! Have a great day!');
+            process.stdout.write('\n');
+            process.exit();
+          }
+        });
+    }, 1000);
+  }, 500);
 });
 
-const sendMessage = async () => {
-  const clientMessage = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'message',
-      message: 'You:',
-    },
-  ])
-    .then(answers => {
-      socket.emit('CLIENTMESSAGE', answers.message);
-
-    });
+const sendMessage = async (room) => {
+  setTimeout(async () => {
+    await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'message',
+        message: 'reply >>>',
+      },
+    ])
+      .then(answers => {
+        socket.emit('MESSAGE', answers.message);
+        process.stdout.write('\n');
+      });
+  }, 500);
 };
 
 // const sendAndReceiveMessages = async () => {
@@ -125,49 +141,3 @@ const sendMessage = async () => {
 //       });
 //   });
 // };
-
-
-
-//   if (room === 'General Plant Care') {
-//     inquirer.prompt([
-//       {
-//         type: 'input',
-//         name: 'message',
-//         message: 'What would you like to say?',
-//       },
-//     ])
-//       .then(answers => {
-//         socket.emit('MESSAGE', answers.message);
-//       });
-//   }
-//   else if (answers.room === 'Orders and Shipping' || answers.room === 'Returns and Refunds') {
-//     inquirer.prompt([
-//       {
-//         type: 'input',
-//         name: 'message',
-//         message: 'please enter your email address and order number for faster service',
-//       },
-//       {
-//         type: 'input',
-//         name: 'message',
-//         message: 'How can we help you today?',
-//       },
-//     ])
-//       .then(answers => {
-//         socket.emit('MESSAGE', answers.message);
-//       },
-//       );
-//   } else {
-//     inquirer.prompt([
-//       {
-//         type: 'input',
-//         name: 'message',
-//         message: 'How can we help you today?',
-//       },
-//     ])
-//       .then(answers => {
-//         socket.emit('MESSAGE', answers.message);
-//       },
-//       );
-//   }
-// });
