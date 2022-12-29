@@ -27,7 +27,7 @@ cartRouter.post('/add-to-cart', async (req, res, next) => {
   });
 });
 
-cartRouter.post('/place-order', async (req, res, next) => {
+cartRouter.post('/orders', bearerAuth, permissions('user'), async (req, res, next) => {
   const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/place-order';
   try {
     const orderData = { plants: req.session.order };
@@ -42,11 +42,33 @@ cartRouter.post('/place-order', async (req, res, next) => {
 });
 
 // update order status to shipped
-cartRouter.put('/place-order/:orderNumber', async (req, res, next) => {
-  const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/place-order/${req.params.orderNumber}`;
+cartRouter.put('/orders/:orderNumber', bearerAuth, permissions('admin'), async (req, res, next) => {
+  const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders/${req.params.orderNumber}`;
   try {
     const response = await axios.put(apiEndpoint);
     res.send(response.data);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+cartRouter.get('/orders', bearerAuth, permissions('admin'), async (req, res, next) => {
+  try {
+    const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders';
+
+    const response = await axios.get(apiEndpoint);
+    res.status(200).send(response.data);
+  } catch (error) {
+    next(error);
+  }
+});
+
+cartRouter.get('/orders/:orderNumber', bearerAuth, permissions('user'), async (req, res, next) => {
+  const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders/${req.params.orderNumber}`;
+  try {
+    const response = await axios.get(apiEndpoint);
+    res.status(200).send(response.data);
   } catch (error) {
     next(error);
   }
