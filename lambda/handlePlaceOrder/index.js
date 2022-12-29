@@ -47,6 +47,12 @@ exports.handler = async (event) => {
     console.log('Order Number: ', orderNumber);
     // Calculate the total cost of the order
     const total = await calculateTotal(orderData.plants);
+
+    let tax = total * 0.08;
+    tax = Math.round(tax * 100) / 100;
+    let finalTotal = total + tax;
+    finalTotal = Math.round(finalTotal * 100) / 100;
+
     console.log('Total: ', total);
     // Create the order object
     const order = {
@@ -54,8 +60,8 @@ exports.handler = async (event) => {
       plants: orderData.plants,
       total: {
         plantTotal: total,
-        tax: total * 0.08,
-        finalTotal: total * 1.08,
+        tax: tax,
+        finalTotal: finalTotal,
       },
       status: 'Pending',
     };
@@ -115,10 +121,12 @@ const calculateTotal = async (plants) => {
     for (const plant of plants) {
       const plantData = await Plant.get(plant.id);
       total += plantData.price * plant.quantity;
+      total = Math.round(100 * total) / 100;
     }
   } else {
     const plantData = await Plant.get(plants.id);
     total += plantData.price * plants.quantity;
+    total = Math.round(100 * total) / 100;
   }
   return total;
 };
