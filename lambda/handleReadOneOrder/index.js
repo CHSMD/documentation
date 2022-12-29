@@ -14,7 +14,7 @@ const orderSchema = new dynamoose.Schema({
       },
     }],
   },
-  total: Number,
+  total: Object,
   status: String,
 }, {
   saveUnknown: true,
@@ -39,7 +39,7 @@ exports.handler = async (event) => {
   } catch (error) {
     return {
       statusCode: 404,
-      body: JSON.stringify({ message: 'No orders found' }),
+      body: JSON.stringify({ message: 'No Orders Found' }),
       headers: {
         'Content-Type': 'application/json',
       },

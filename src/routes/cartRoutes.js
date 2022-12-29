@@ -16,19 +16,27 @@ cartRouter.use(session({
 }));
 
 cartRouter.post('/add-to-cart', async (req, res, next) => {
-  const plantId = req.body.id;
-  const quantity = req.body.quantity;
+  try {
+    const plantId = req.body.id;
+    const quantity = req.body.quantity;
 
-  req.session.order = req.session.order || [];
-  req.session.order.push({ id: plantId, quantity });
-  res.send({
-    message: `Successfully added to order`,
-    order: req.session.order,
-  });
+    if (!plantId || !quantity) {
+      throw new Error('Missing plantId or quantity');
+    }
+
+    req.session.order = req.session.order || [];
+    req.session.order.push({ id: plantId, quantity });
+    res.send({
+      message: `Successfully added ${quantity} of plantID:${plantId} to your cart`,
+      order: req.session.order,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 cartRouter.post('/orders', bearerAuth, permissions('user'), async (req, res, next) => {
-  const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/place-order';
+  const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders';
   try {
     const orderData = { plants: req.session.order };
     console.log(orderData);
@@ -54,9 +62,8 @@ cartRouter.put('/orders/:orderNumber', bearerAuth, permissions('admin'), async (
 
 
 cartRouter.get('/orders', bearerAuth, permissions('admin'), async (req, res, next) => {
+  const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders';
   try {
-    const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders';
-
     const response = await axios.get(apiEndpoint);
     res.status(200).send(response.data);
   } catch (error) {
@@ -74,32 +81,4 @@ cartRouter.get('/orders/:orderNumber', bearerAuth, permissions('user'), async (r
   }
 });
 
-
-// cartRouter.post('/add-to-order', bearerAuth, permissions('create'), async (req, res, next) => {
-//   const plantId = req.body.id;
-//   const quantity = req.body.quantity;
-
-//   req.session.order = req.session.order || [];
-//   req.session.order.push({ id: plantId, quantity });
-//   res.send({
-//     message: 'Plant added to order',
-//     order: req.session.order,
-//   });
-// });
-
-// cartRouter.post('/place-order', bearerAuth, permissions('create'), async (req, res, next) => {
-//   const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/place-order';
-//   try {
-//     const orderData = { plants: req.session.order };
-//     const response = await axios.post(apiEndpoint, orderData);
-
-//     req.session.order = [];
-//     res.send(response.data);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
 module.exports = cartRouter;
-
-
