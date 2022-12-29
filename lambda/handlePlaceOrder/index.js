@@ -140,3 +140,6 @@ const calculateTotal = async (plants) => {
   }
   return total;
 };
+
+
+
