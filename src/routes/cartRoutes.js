@@ -49,7 +49,6 @@ cartRouter.post('/orders', bearerAuth, permissions('user'), async (req, res, nex
   }
 });
 
-// update order status to shipped
 cartRouter.put('/orders/:orderNumber', bearerAuth, permissions('admin'), async (req, res, next) => {
   const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders/${req.params.orderNumber}`;
   try {
@@ -59,7 +58,6 @@ cartRouter.put('/orders/:orderNumber', bearerAuth, permissions('admin'), async (
     next(error);
   }
 });
-
 
 cartRouter.get('/orders', bearerAuth, permissions('admin'), async (req, res, next) => {
   const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders';
