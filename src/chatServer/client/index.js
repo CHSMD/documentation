@@ -7,7 +7,7 @@ const inquirer = require('inquirer');
 
 const socket = io(`http://localhost:3001/myaccount/chat`);
 
-const joinRoomPrompt = async() => {
+const joinRoomPrompt = async () => {
 
   inquirer.prompt([
     {
@@ -32,30 +32,20 @@ const joinRoomPrompt = async() => {
     .then(answers => {
       socket.emit('JOIN', answers.room, { email: answers.email, orderNumber: answers.orderNumber });
       console.log('Joined Room:', answers.room);
-      sendAndReceiveMessages();
     });
 };
 
 joinRoomPrompt();
 
-socket.on('MESSAGE', payload => {
-  console.log(`Plant Agent: ${ payload }`);
-  // if(payload === 'Is there anything else I can help you with?'){
-  //   leaveChatPrompt();
-});
+
 
 socket.on('WAITING', () => {
   console.log('You are currently waiting for an agent to become available. Please wait.');
 });
 
-socket.on('CHAT-STARTED', () => {
+socket.on('CHAT-STARTED', async () => {
   console.log('Your conversation with an agent has started.');
-  messagePrompt();
-});
-
-const messagePrompt = async() => {
-
-  inquirer.prompt([
+  const clientMessage = await inquirer.prompt([
     {
       type: 'input',
       name: 'message',
@@ -63,42 +53,78 @@ const messagePrompt = async() => {
     },
   ])
     .then(answers => {
-      socket.emit('MESSAGE', answers.message);
-    },
-    );
-};
+      socket.emit('CLIENTMESSAGE', answers.message);
+    });
+});
 
-const sendAndReceiveMessages = async() => {
+socket.on('MESSAGE', async(payload) => {
+  console.log(`Plant Agent: ${payload}`);
+  const continueChat = inquirer.prompt([
+    {
+      type: 'list',
+      name: 'replyOrExit',
+      message: 'Would you like to reply or exit the chat?',
+      choices: ['Reply', 'Exit'],
+    },
+  ])
+    .then(answers => {
+      if (answers.replyOrExit === 'Reply') {
+        sendMessage();
+      } else {
+        socket.emit('CHAT-ENDED');
+        console.log('Have a great day!');
+        process.exit();
+      }
+    });
+});
+
+const sendMessage = async () => {
   const clientMessage = await inquirer.prompt([
     {
       type: 'input',
       name: 'message',
-      message: 'Please enter your message:',
+      message: 'You:',
     },
-  ]);
-  socket.emit('MESSAGE', clientMessage.message);
-  socket.on('MESSAGE', payload => {
-    console.log(`Plant Agent: ${ payload }`);
-    // if(payload === 'Is there anything else I can help you with?'){
-    //   leaveChatPrompt();
-    // }
-    const continueChat = inquirer.prompt([
-      {
-        type: 'list',
-        name: 'replyOrExit',
-        message: 'Would you like to reply or exit the chat?',
-        choices: ['Reply', 'Exit'],
-      },
-    ]);
-    if(continueChat.replyOrExit === 'Reply'){
-      sendAndReceiveMessages();
-    } else {
-      socket.emit('CHAT-ENDED');
-      console.log('Have a great day!');
-      process.exit();
-    }
-  });
+  ])
+    .then(answers => {
+      socket.emit('CLIENTMESSAGE', answers.message);
+
+    });
 };
+
+// const sendAndReceiveMessages = async () => {
+//   const clientMessage = await inquirer.prompt([
+//     {
+//       type: 'input',
+//       name: 'message',
+//       message: 'Please enter your message:',
+//     },
+//   ]);
+//   socket.emit('CLIENTMESSAGE', clientMessage.message);
+//   socket.on('MESSAGE', payload => {
+//     console.log(`Plant Agent: ${payload}`);
+//     // if(payload === 'Is there anything else I can help you with?'){
+//     //   leaveChatPrompt();
+//     // }
+//     const continueChat = inquirer.prompt([
+//       {
+//         type: 'list',
+//         name: 'replyOrExit',
+//         message: 'Would you like to reply or exit the chat?',
+//         choices: ['Reply', 'Exit'],
+//       },
+//     ])
+//       .then(answers => {
+//         if (answers.replyOrExit === 'Reply') {
+//           sendAndReceiveMessages();
+//         } else {
+//           socket.emit('CHAT-ENDED');
+//           console.log('Have a great day!');
+//           process.exit();
+//         }
+//       });
+//   });
+// };
 
 
 
