@@ -2,18 +2,6 @@
 
 const dynamoose = require('dynamoose');
 
-// const plantSchema = new dynamoose.Schema({
-//   id: Number,
-//   name: String,
-//   type: String,
-//   genus: String,
-//   price: Number,
-//   availability: Number,
-//   inStock: Boolean,
-// });
-
-// const Plant = dynamoose.model('plant-table', plantSchema);
-
 const orderSchema = new dynamoose.Schema({
   orderNumber: Number,
   plants: {
@@ -26,7 +14,7 @@ const orderSchema = new dynamoose.Schema({
       },
     }],
   },
-  total: Number,
+  total: Object,
   status: String,
 }, {
   saveUnknown: true,
@@ -48,12 +36,12 @@ exports.handler = async (event) => {
     let today = new Date();
     let currentDate = today.toDateString();
 
-    // Generate a tracking number that always starts with '1Z' and is 18 characters long
-    let generateNumber = '1Z' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    // Generate a tracking number that always starts with '1Z' and is 12 characters long
+    let generateNumber = '1Z' + Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
     let trackingNumber = generateNumber.toUpperCase();
 
     // Update the order status
-    order.status = `Shipped on ${currentDate} with Tracking Number: ${trackingNumber}`;
+    order.status = `Shipped on ${currentDate}. Tracking Number: ${trackingNumber}`;
 
     // Save the updated order to the database
     await order.save();
