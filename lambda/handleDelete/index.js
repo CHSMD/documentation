@@ -20,7 +20,7 @@ exports.handler = async (event) => {
     await Plant.delete(plantData);
     return {
       statusCode: 204,
-      body: JSON.stringify({ message: 'Plant deleted successfully' }),
+      body: JSON.stringify({ message: 'Plant Deleted Successfully' }),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -35,17 +35,3 @@ exports.handler = async (event) => {
     };
   }
 };
-
-// code for Express server using Axios to make a DELETE request to the API Gateway endpoint
-// app.delete('/collection/:id', async (req, res, next) => {
-//   const apiEndpoint = `https://<api-id>.execute-api.<region>.amazonaws.com/<stage>/collection/${req.params.id}`;
-//   try {
-//     const response = await axios.delete(apiEndpoint);
-//     res.status(204).send(response.data);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
-
-

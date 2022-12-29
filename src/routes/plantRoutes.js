@@ -35,7 +35,6 @@ plantRouter.get('/collection/:id',  bearerAuth, permissions('user'), async (req,
   }
 });
 
-
 plantRouter.put('/collection/:id', bearerAuth, permissions('admin'), async (req, res, next) => {
   const apiEndpoint = `https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection/${req.params.id}`;
   try {
@@ -58,14 +57,6 @@ plantRouter.delete('/collection/:id',  bearerAuth, permissions('admin'), async (
 
 plantRouter.post('/collection',  bearerAuth, permissions('admin'), async (req, res, next) => {
   const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/collection';
-  // const options = {
-  //   method: 'GET',
-  //   url: 'https://house-plants.p.rapidapi.com/common/coralberry',
-  //   headers: {
-  //     'X-RapidAPI-Key': 'e2b412e95bmshd819cfe55d2ac1bp14e845jsn7156cb08f7f5',
-  //     'X-RapidAPI-Host': 'house-plants.p.rapidapi.com',
-  //   },
-  // };
   try {
     const response = await axios.post(apiEndpoint, req.body);
     res.status(200).send(response.data);

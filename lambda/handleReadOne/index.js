@@ -38,14 +38,3 @@ exports.handler = async (event) => {
     };
   }
 };
-
-// Code for Express server using Axios to make a GET request to the API Gateway endpoint
-// app.get('/collection/:id', async (req, res, next) => {
-//   const apiEndpoint = `https://<api-id>.execute-api.<region>.amazonaws.com/<stage>/collection/${req.params.id}`;
-//   try {
-//     const response = await axios.get(apiEndpoint);
-//     res.status(200).send(response.data);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
