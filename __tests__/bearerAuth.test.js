@@ -4,19 +4,22 @@ process.env.SECRET = 'TEST_SECRET';
 
 const bearer = require('../src/auth/middleware/bearer');
 const { db, users } = require('../src/auth/models/index');
+const supertest = require('supertest');
 const jwt = require('jsonwebtoken');
+const { app } = require('../src/server');
+const request = supertest(app);
 
 let userData = {
-  testUser: { username: 'user', password: 'password', role: 'admin' },
+  testUser: { username: 'testUser', password: 'testPassword', role: 'admin' },
 };
 
 // Pre-load our database with fake users
 beforeAll(async () => {
   await db.sync();
-  await users.create(userData);
+  await users.create(userData.testUser);
 });
 afterAll(async () => {
-  await db.drop();
+  db.drop();
 });
 
 describe('Auth Middleware', () => {
