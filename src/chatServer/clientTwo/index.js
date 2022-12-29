@@ -61,7 +61,7 @@ socket.on('CHAT-STARTED', async (room) => {
   }, 500);
 });
 
-socket.on('MESSAGE', async(payload) => {
+socket.on('MESSAGE', async (payload) => {
 
   setTimeout(() => {
     console.log(`REP: ${payload}`);

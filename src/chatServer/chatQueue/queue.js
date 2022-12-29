@@ -34,11 +34,21 @@ class Queue extends QueueNode {
     if (!this.front) {
       this.last = null;
     }
-    return current.data;
+    return current;
   }
 
   isEmpty() {
     return !this.front;
+  }
+
+  length() {
+    let current = this.front;
+    let count = 0;
+    while (current) {
+      count++;
+      current = current.next;
+    }
+    return count;
   }
 }
 
