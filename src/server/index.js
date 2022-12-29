@@ -29,37 +29,28 @@ plantChat.on('connection', (socket) => {
 
       socket.join(room);
       console.log('Joined room', room);
-
+      console.log(socket.rooms);
       socket.emit('CHAT-STARTED');
-      socket.emit('MESSAGE', 'Hello! How can I help you?');
-      socket.on('MESSAGE', (payload) => {
-        console.log(`Client: ${payload}`);
-      });
-      sendAndReceiveMessages();
       console.log('Your conversation with an agent has started.');
-
     } else {
       chatQueue.enqueue({ socket, room, payload });
       socket.emit('WAITING');
-      console.log('You are currently waiting for an agent to become available. Please wait...');
     }
   });
 
-  const sendAndReceiveMessages = async () => {
+  socket.on('CLIENTMESSAGE', async (payload) => {
+    console.log('Client:', payload);
     const repMessage = await inquirer.prompt([
       {
         type: 'input',
         name: 'message',
-        message: 'Please enter your message:',
+        message: 'Plant Agent:',
       },
-    ]);
-    socket.to(socket.rooms[0]).emit('MESSAGE', repMessage.message);
-
-    socket.on('MESSAGE', (payload) => {
-      console.log(`Client: ${payload}`);
-    });
-    sendAndReceiveMessages();
-  };
+    ])
+      .then(answers => {
+        socket.emit('MESSAGE', answers.message);
+      });
+  });
 
   socket.on('CHAT-ENDED', room => {
     if (!chatQueue.isEmpty()) {
@@ -71,6 +62,25 @@ plantChat.on('connection', (socket) => {
       availableRep = true;
     }
   });
+
+  // const sendAndReceiveMessages = async () => {
+  //   const repMessage = await inquirer.prompt([
+  //     {
+  //       type: 'input',
+  //       name: 'message',
+  //       message: 'Plant Agent:',
+  //     },
+  //   ])
+  //     .then(answers => {
+  //       socket.emit('MESSAGE', answers.message);
+  //     });
+
+  //   socket.on('CLIENTMESSAGE', (payload) => {
+  //     console.log(`Client: ${payload}`);
+  //   });
+  //   sendAndReceiveMessages();
+  // };
+
 });
 
 
@@ -91,4 +101,5 @@ module.exports = {
       console.log(`Server up on port: ${PORT}`);
     });
   },
+  app: app,
 };
