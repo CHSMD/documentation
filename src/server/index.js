@@ -175,7 +175,7 @@ app.get('/', (req, res) => {
 
 //Error-handlers
 app.use('*', handle404);
-// app.use(handle500);
+app.use(handle500);
 
 module.exports = {
   server: io,
