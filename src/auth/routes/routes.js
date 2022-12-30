@@ -31,11 +31,10 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
 
 authRouter.get('/users', bearerAuth, permissions('admin'), async (req, res, next) => {
   try {
-    const userRecords = await users.findAll({});
-    const list = userRecords.map(user => user.username);
-    res.status(200).json(list);
+    let userRecords = await users.findAll({});
+    res.status(200).json(userRecords);
   } catch (error) {
-    console.log(error);
+    next('Get User Route Error:', error.message);
   }
 });
 

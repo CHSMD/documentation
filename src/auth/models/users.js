@@ -8,13 +8,30 @@ const SECRET = process.env.SECRET || 'itsasecret';
 
 const userModel = (sequelize, DataTypes) => {
   const model = sequelize.define('Users', {
-    username: { type: DataTypes.STRING, required: true, unique: true },
-    password: { type: DataTypes.STRING, required: true },
-    role: { type: DataTypes.ENUM('user', 'admin'), required: true, defaultValue: 'user'},
+    username: {
+      type: DataTypes.STRING,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      required: true,
+    },
+    role: {
+      type: DataTypes.ENUM,
+      values:['user', 'admin'],
+      required: true,
+      defaultValue: 'user',
+    },
     token: {
       type: DataTypes.VIRTUAL,
       get() {
-        return jwt.sign({ username: this.username }, SECRET);
+        return jwt.sign({ username: this.username }, SECRET, {
+          // this is an algorithm that is used to sign the token that is stronger than the default
+          algorithm: 'HS256',
+          // this is a 1 day token
+          expiresIn: 1000 * 60 * 60 * 24 * 1,
+        });
       },
       set(tokenObj) {
         let token = jwt.sign(tokenObj, SECRET);
@@ -34,8 +51,10 @@ const userModel = (sequelize, DataTypes) => {
   });
 
   model.beforeCreate(async (user) => {
-    let hashedPass = await bcrypt.hash(user.password, 10);
+    let hashedPass = await bcrypt.hash(user.password, 6);
     user.password = hashedPass;
+
+    return user;
   });
 
   model.authenticateBasic = async function (username, password) {
