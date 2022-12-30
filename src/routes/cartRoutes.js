@@ -62,8 +62,10 @@ cartRouter.put('/orders/:orderNumber', bearerAuth, permissions('admin'), async (
 cartRouter.get('/orders', bearerAuth, permissions('admin'), async (req, res, next) => {
   const apiEndpoint = 'https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace/orders';
   try {
-    const response = await axios.put(apiEndpoint);
-    res.send(response.data);
+
+    const response = await axios.get(apiEndpoint);
+    res.status(200).send(response.data);
+
   } catch (error) {
     next(error);
   }
