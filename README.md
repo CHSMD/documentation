@@ -1,44 +1,56 @@
-# Plant Space
+# plant.space
 
-### Author's: Camilla Rees, Dustin Apodaca, Megan Seibert-Hughes, Hunter Fehr, Seth Pierce
+## Project Team:
+---
 
-### Problem Domain
+- [Camilla Rees](https://github.com/camillarees)
+- [Dustin Apodaca](https://github.com/dustinapodaca)
+- [Seth Pierce](https://github.com/sethppierce)
+- [Megan Seibert-Hughes](https://github.com/maefae)
+- [Hunter Fehr](https://github.com/hmfehr)
 
-Plant Space in an online botanical store and learning platform that offers the convenience of finding the perfect plant that thrives in your climate and getting it delivered to your door.
+---
+## Problem Domain
 
-![Plant Space](./assets/plantspace.jpg)
+- Plant Space in an online botanical store and learning platform that offers the convenience of finding the perfect plant that thrives in your climate and getting it delivered to your door.
 
-### Links and Resources
+![Plant Space](./assets/img/plantspace.jpg)
 
-![UML, Domain Model, and Database Schema](./assets/plantSpace-UML.png)
+## Links and Resources
 
-- [Cooperation Plan](https://github.com/CHSMD/plant.space/blob/main/documentation/cooperation-plan.md)
-- [Project Pitch](https://github.com/CHSMD/plant.space/blob/main/documentation/project-pitch.md)
+
+- [Cooperation Plan](./assets/documentation/cooperation-plan.md)
+- [Project Pitch](./assets/documentation/project-pitch.md)
 - [Kanban Board & User Stories](https://github.com/orgs/CHSMD/projects/1)
 
+### UML & Domain Model
+
+![UML, Domain Model, and Database Schema](./assets/img/plantSpace-UML.png)
 ## Deployment
 
-- [Deployed Back-End Server](https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace)
+- [plant.space Express Server with WebSocket Integration - PROD Server](https://plant-space-prod.onrender.com)
+- [plant.space Express Server with WebSocket Integration - DEV Server](https://plant-space-dev.onrender.com)
+- [plant.space AWS API Gateway Server](https://cognb1larg.execute-api.us-west-2.amazonaws.com/plantspace)
 
-### Key Features & How They Work
+## Key Features
 
 1. Admin can login and read, create, update or delete plants in the collection, and get all customer orders
-    ![Signup](./assets/signup.png)
-    ![Signin](./assets/signin.png)
-    ![createPlant](./assets/createPlant.png)
-    ![updatePlant](./assets/updatePlant.png)
-    ![getAllOrders](./assets/getAllOrders.png)
-    ![Signin](./assets/signin.png)
+
+    ![signUp](./assets/img/signup.png)
+    ![signIn](./assets/img/signin.png)
+    ![createPlant](./assets/img/createPlant.png)
+    ![updatePlant](./assets/img/updatePlant.png)
+    ![getAllOrders](./assets/img/getAllOrders.png)
 
     - Lambda CRUD functions connected to API Gateway pathways
 
 2. Customer can login, browse plant collection of plants to purchase, make an order/transaction and customize the number of items in their order
 
-    ![getAllPlants](./assets/getAllPlants.png)
-    ![addToCart](./assets/addToCart.png)
-    ![placeAnOrder](./assets/placeAnOrder.png)
-    ![readOneOrder](./assets/readOneOrder.png)
-    ![updateOrder](./assets/updateOrder.png)
+    ![getAllPlants](./assets/img/getAllPlants.png)
+    ![addToCart](./assets/img/addToCart.png)
+    ![placeAnOrder](./assets/img/placeAnOrder.png)
+    ![readOneOrder](./assets/img/readOneOrder.png)
+    ![updateOrder](./assets/img/updateOrder.png)
 
     -  Basic auth allows users to create and sign in to their account, and bearer auth permissions connect to plant and cart routers which pull from API gateway path and allow users to perform read, update, create or delete according to their respective role based access
 
@@ -51,12 +63,15 @@ Plant Space in an online botanical store and learning platform that offers the c
 4. Deployed on AWS (API Gateway, Lambda functions, DynamoDB)
 5. Tests for each feature
 
-#### Tests
+## Tests
 
-- Lambda function tests - Lambda
-- Route tests - API Gateway
-- Auth tests - Test suites in VS Code
-- Chat room tests - Inquirer
+- Server Tests
+
+    ![serverTests](./assets/img/serverTests.png)
+
+- Auth Route Tests
+
+    ![authTests](./assets/img/authRouteTests.png)
 
 ## Change Log (Significant PRs)
 
@@ -68,14 +83,19 @@ Plant Space in an online botanical store and learning platform that offers the c
 - [PR 14: Update Plant Route and Cart Route Permissions](https://github.com/CHSMD/plant.space/pull/14)
 - [PR 16: Working Socket Connections](https://github.com/CHSMD/plant.space/pull/16)
 - [PR 19: Place Order Function and Add to Cart Route](https://github.com/CHSMD/plant.space/pull/19)
-- [PR 20: Clean Socket Server and Update Order Function](https://github.com/CHSMD/plant.space/pull/20)
+- [PR 20: Refined Inquirer Socket Server Chat and Working Place Order Functionality](https://github.com/CHSMD/plant.space/pull/20)
 - [PR 22: Error Handlers](https://github.com/CHSMD/plant.space/pull/22)
 - [PR 23: Read One Order and Read Orders Lambda Functions complete](https://github.com/CHSMD/plant.space/pull/23)
 - [PR 27: Updated User Model and Permissions](https://github.com/CHSMD/plant.space/pull/27)
+- [PR 44: Successful Server and Auth Route Tests](https://github.com/CHSMD/plant.space/pull/44)
 
 ## Credit and Collaborations
 
 - Dynamoose Documentation
+- Express Session Middleware Docs
 - Stack Overflow
-- Special thanks to Ryan Galloway and Justin Hamerly
+- AWS Documentation
+- Socket.io Documentation
+- Medium
+- Special thanks to Ryan Gallaway and Justin Hammerly
 

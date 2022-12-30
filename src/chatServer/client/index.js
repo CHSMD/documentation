@@ -4,8 +4,9 @@ require('dotenv').config();
 const { io } = require('socket.io-client');
 const inquirer = require('inquirer');
 // const PORT = process.env.PORT || 3002;
+const SOCKETSERVER = process.env.SOCKET_SERVER || 'http://localhost:3001';
 
-const socket = io(`http://localhost:3001/myaccount/chat`);
+const socket = io(`${SOCKETSERVER}/myaccount/chat`);
 
 const joinRoomPrompt = async () => {
   inquirer.prompt([
