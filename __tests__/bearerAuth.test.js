@@ -4,15 +4,20 @@ process.env.SECRET = 'TEST_SECRET';
 
 const bearer = require('../src/auth/middleware/bearer');
 const { db, users } = require('../src/auth/models/index');
-const jwt = require('jsonwebtoken');
 
-let userInfo = {
-  admin: { username: 'admin', password: 'password', role: 'admin' },
+const supertest = require('supertest');
+const jwt = require('jsonwebtoken');
+const { app } = require('../src/server');
+const request = supertest(app);
+
+let userData = {
+  testUser: { username: 'testUser', password: 'testPassword', role: 'admin' },
 };
 
+// Pre-load our database with fake users
 beforeAll(async () => {
   await db.sync();
-  await users.create(userInfo.admin);
+  await users.create(userData.testUser);
 });
 
 afterAll(async () => {
@@ -30,11 +35,12 @@ describe('Auth Middleware', () => {
   const next = jest.fn();
 
   describe('user authentication', () => {
+    it('fails login for an admin with an invalid token', () => {
 
-    it('fails a login for a user (admin) with an incorrect token', () => {
       req.headers = {
-        authorization: 'Bearer thisisabadtoken',
+        authorization: 'Bearer invalidtoken',
       };
+
       return bearer(req, res, next)
         .then(() => {
           expect(next).not.toHaveBeenCalled();
@@ -42,11 +48,15 @@ describe('Auth Middleware', () => {
         });
     });
 
-    it('logs in a user with a proper token', () => {
+    it('successful login for an admin user with a valid token', () => {
 
       const user = { username: 'admin' };
       const token = jwt.sign(user, process.env.SECRET);
-      req.headers = { authorization: `Bearer ${token}` };
+
+      req.headers = {
+        authorization: `Bearer ${token}`,
+      };
+
       return bearer(req, res, next)
         .then(() => {
           expect(next).toHaveBeenCalledWith();
