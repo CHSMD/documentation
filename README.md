@@ -1,6 +1,6 @@
 # Plant Space
 
-### Author's: Camilla Rees, Dustin Apodaca, Megan Seibert-Hughes, Hunter Fehr
+### Author's: Camilla Rees, Dustin Apodaca, Megan Seibert-Hughes, Hunter Fehr, Seth Pierce
 
 ### Problem Domain
 
