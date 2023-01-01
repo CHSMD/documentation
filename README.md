@@ -55,7 +55,9 @@
     -  Basic auth allows users to create and sign in to their account, and bearer auth permissions connect to plant and cart routers which pull from API gateway path and allow users to perform read, update, create or delete according to their respective role based access
 
 3. Multiple customers can enter a chat room queue and wait their turn to message with a representative (plant nurse) to learn more about an item, get help with plant care, etc.
-    ![]()
+
+    ![chatServer](./assets/img/chatServer2.png)
+
     - A queue is implemented to keep customers on a first in first out lineup
     - A socket server allows users to join rooms, emit messages, and listen for message events
     - Inquirer provides the structure for which the chat rooms functionality can be displayed

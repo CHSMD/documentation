@@ -33,6 +33,10 @@ const userModel = (sequelize, DataTypes) => {
           expiresIn: 1000 * 60 * 60 * 24 * 1,
         });
       },
+      set(tokenObj) {
+        let token = this.setDataValue(tokenObj, SECRET);
+        return token;
+      },
     },
     capabilities: {
       type: DataTypes.VIRTUAL,
