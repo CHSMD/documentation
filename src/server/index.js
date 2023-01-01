@@ -60,7 +60,7 @@ plantChat.on('connection', (socket) => {
       socket.emit('CHAT-STARTED', room);
       process.stdout.write('\n');
 
-      console.log('CONNECTED: Your conversation with a client has started.');
+      console.log(`CONNECTED: Your conversation with a client for: "${inRoom}" has STARTED.`);
 
       setTimeout(() => {
         process.stdout.write('\n');
@@ -119,6 +119,9 @@ plantChat.on('connection', (socket) => {
 
   socket.on('CHAT-ENDED', () => {
     if (!chatQueue.isEmpty()) {
+      process.stdout.write('\n');
+      console.log(`DISCONNECTED: Your conversation with a client for: "${inRoom}" has ENDED.`);
+      process.stdout.write('\n');
 
       const nextUser = chatQueue.dequeue();
       const { socket, room } = nextUser.data;
@@ -133,7 +136,7 @@ plantChat.on('connection', (socket) => {
       socket.emit('CHAT-STARTED', room);
       process.stdout.write('\n');
 
-      console.log('CONNECTED: Your conversation with a new client has started.');
+      console.log(`CONNECTED: Your conversation with a client for: "${inRoom}" has STARTED.`);
 
       availableRep = false;
 
@@ -147,7 +150,7 @@ plantChat.on('connection', (socket) => {
       console.log('Available Rep:', availableRep);
 
       process.stdout.write('\n');
-      console.log(`DISCONNECTED: Your conversation with a client in Room "${inRoom}" has ended.`);
+      console.log(`DISCONNECTED: Your conversation with a client for: "${inRoom}" has ENDED.`);
       process.stdout.write('\n');
       socket.leave(inRoom);
     }
